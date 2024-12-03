@@ -25,19 +25,6 @@ def clonotypic_entropy(
     return cent
 
 
-def clonotypic_entropy(
-    adata, phenotype, method="probabilistic", base=2, normalized=False
-):
-    logf = lambda x: np.log(x) / np.log(base)
-    joint_distribution(adata, method=method)
-    jd = adata.uns["joint_distribution"]
-    res = jd.loc[phenotype].to_numpy()
-    cent = entropy(res, base=base)
-    if normalized:
-        cent = cent / logf(len(res))
-    return cent
-
-
 def clonotypic_entropy_topn(
     adata, phenotype, method="probabilistic", base=2, normalized=False, top=10
 ):
@@ -177,8 +164,8 @@ def clonality(adata):
         for bcr in unique_clonotypes:
             bcrs = pheno_df[pheno_df[adata.uns["bcri_clone_key"]] == bcr]
             nums.append(len(bcrs))
-        clonality = 1 - entropy(numpy.array(nums), base=2) / numpy.log2(len(nums))
-        entropys[phenotype] = numpy.nan_to_num(clonality)
+        clonality = 1 - entropy(np.array(nums), base=2) / np.log2(len(nums))
+        entropys[phenotype] = np.nan_to_num(clonality)
     return entropys
 
 
